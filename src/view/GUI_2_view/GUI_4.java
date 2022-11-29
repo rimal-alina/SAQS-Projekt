@@ -1,56 +1,80 @@
-package view;
+/*
+package view.GUI_2_view;
 
-import controller.AssessmentRecordController;
-import controller.AssessmentRecordKeyListener;
-import controller.AssessmentRecordListSelectionListener;
-import model.StationModel;
+import model.Station;
+import model.StationListModel;
+import ui_controller.GUI_1_ui_controller.GUI_1ListChangeListener;
+import ui_controller.GUI_2_ui_controller.GUI_2KeyListener;
+import ui_controller.GUI_2_ui_controller.GUI_2SelectionListener;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
+import business_controller.DataPersistenceFile;
+import business_controller.StationCreator;
 
 // view extends java class JFrame
-public class AssessmentRecordView extends JFrame {
+public class GUI_2 extends JFrame {
     // create objects which contents will be changed during runtime as class variables
-    private JList stationList;
+    private JList<Station> stationList;
     private JTextField stationIdTextField;
     private JTextField dateTextField;
     private JTextField targetTextField;
     private JTextField actualTextField;
     private JTextField varianceTextField;
     private JLabel messageLabel;
-    private AssessmentRecordController controller;
+    private JLabel varianceWarning;
     
-    public AssessmentRecordView() {
+    public GUI_2() {
         super(); // call constructor of super class
         init();
     }
     
     private void init() {
         // create empty list
-        stationList = new JList();
+        this.stationList = new JList<Station>();
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setViewportView(stationList);  // add scrollpane to list
-        //stationList.setLayoutOrientation(JList.VERTICAL);
+        scrollPane.setViewportView(this.stationList);  // add scrollpane to list
         setStationList();
+        // add Listener for station list changes
+        GUI_1ListChangeListener stationListChangeListener = new GUI_1ListChangeListener(this.stationList);
+        DataPersistenceFile.getInstance().addStationListChangeListener(stationListChangeListener);
         // create labels
-        JLabel stationIdLabel = new JLabel("Station ID");
-        JLabel dateLabel = new JLabel("Date");
-        JLabel targetLabel = new JLabel("Target");
-        JLabel actualLabel = new JLabel("Actual");
-        JLabel varianceLabel = new JLabel("Variance");
+        JLabel stationIdLabel = new JLabel("Stations-ID");
+        JLabel dateLabel = new JLabel("Messungsdatum");
+        JLabel targetLabel = new JLabel("Zielwert");
+        JLabel actualLabel = new JLabel("Tatsächlicher Wert");
+        JLabel varianceLabel = new JLabel("Abweichung");
         messageLabel = new JLabel(" ");
+        // set color
+        Color labelcolor = new Color(100, 30, 250);
+        stationIdLabel.setForeground(labelcolor); 
+        dateLabel.setForeground(labelcolor); 
+        targetLabel.setForeground(labelcolor); 
+        actualLabel.setForeground(labelcolor); 
+        varianceLabel.setForeground(labelcolor); 
+        // create extra variance output
+        JPanel variancePanel = new JPanel();
+        varianceWarning = new JLabel("");
+        //variancePanel.setLayout(new FlowLayout());
+        variancePanel.add(varianceWarning);
         // create text fields
         stationIdTextField = new JTextField();
         dateTextField = new JTextField();
@@ -58,13 +82,9 @@ public class AssessmentRecordView extends JFrame {
         actualTextField = new JTextField();
         varianceTextField = new JTextField();
         disableAllTextFields();
-        // create buttons
-        JButton saveButton = new JButton("Speichern");
-        JButton newButton = new JButton("Neue Station");
-        JButton deleteButton = new JButton("Station entfernen");
 
         // add elements to ui/frame      
-        this.setTitle("Assessment Record");
+        this.setTitle("Eis Messungsanwendung GUI 2");
         this.setLayout(new BorderLayout(20, 0)); // horizontal and vertical gap
         this.add(scrollPane, BorderLayout.WEST);
         JPanel valuePanel = new JPanel();
@@ -79,15 +99,10 @@ public class AssessmentRecordView extends JFrame {
         valuePanel.add(actualTextField);
         valuePanel.add(varianceLabel);
         valuePanel.add(varianceTextField);
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new FlowLayout());
-        buttonPanel.add(saveButton);
-        buttonPanel.add(newButton);
-        buttonPanel.add(deleteButton);
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
         mainPanel.add(valuePanel, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainPanel.add(variancePanel, BorderLayout.SOUTH);
         this.add(mainPanel, BorderLayout.CENTER);
         this.add(messageLabel, BorderLayout.SOUTH);
 
@@ -96,20 +111,25 @@ public class AssessmentRecordView extends JFrame {
         valuePanel.setPreferredSize(new Dimension(250, 300));
 
         // add listener to objects
-        stationList.addListSelectionListener(new AssessmentRecordListSelectionListener(this));
-        controller = new AssessmentRecordController(this);
-        saveButton.addActionListener(controller);
-        newButton.addActionListener(controller);
-        deleteButton.addActionListener(controller);
-        actualTextField.addKeyListener(new AssessmentRecordKeyListener(this));
+        stationList.addListSelectionListener(new GUI_2SelectionListener(this));
+        actualTextField.addKeyListener(new GUI_2KeyListener(this));
+        dateTextField.addKeyListener(new GUI_2KeyListener(this));
 
         // pack, visualize
         this.pack();
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setVisible(true);
-    }
 
+        // remove station list change listener on close
+        this.addWindowListener(new WindowAdapter(){
+            @Override
+            public void windowClosing (WindowEvent e){
+                DataPersistenceFile.getInstance().removeStationListChangeListener(stationListChangeListener);
+                e.getWindow().dispose();
+            }
+        });
+    }
 
     public void disableAllTextFields() {
         stationIdTextField.setEditable(false);
@@ -119,23 +139,22 @@ public class AssessmentRecordView extends JFrame {
         varianceTextField.setEditable(false);
     }
 
-        public void enablePossibleTextFields() {
+    public void enablePossibleTextFields() {
         dateTextField.setEditable(true);
         actualTextField.setEditable(true);
     }
 
-
     public void setStationList() {
-        List valueList = StationModel.getInstance().getStationList();
+        List <Station> valueList = StationListModel.getInstance().getStationList();
         DefaultListModel listModel = new DefaultListModel();
-        for(int i=0; i<valueList.size(); i++) {
+        for (int i=0; i<valueList.size(); i++) {
             listModel.addElement(valueList.get(i));
         }
         stationList.setModel(listModel);
     }
 
     public List getStationList() {
-        List list = new ArrayList();
+        List list = new ArrayList<Station>();
         DefaultListModel listModel = ((DefaultListModel)stationList.getModel());
         for(int i=0; i<listModel.size(); i++) {
             list.add(listModel.get(i));
@@ -143,8 +162,8 @@ public class AssessmentRecordView extends JFrame {
         return list;
     }
 
-    public Object getSelectedStationListObject() {
-        return stationList.getModel().getElementAt(stationList.getSelectedIndex());
+    public Station getSelectedStationListObject() {
+        return (Station) stationList.getModel().getElementAt(stationList.getSelectedIndex());
     }
 
     public int getSelectedStationListIndex() {
@@ -152,27 +171,23 @@ public class AssessmentRecordView extends JFrame {
     }
 
     /*
-        please note that we use model of JList to add/change/remove objects
+        please note that we use model of JList to add and change objects
         in our case it does not make so much difference, 
-        but sometimes it brings some benefits.
+        but sometimes it brings some benefits
     */
-    public void addStationToList(Object o) {
-        ((DefaultListModel)stationList.getModel()).addElement(o);
-    }
+    /*
 
     public void changeSelectedStationListObject(Object o) {
         ((DefaultListModel)stationList.getModel()).set(stationList.getSelectedIndex(), o);
     }
 
-    public void removeStationFromListAt(int index) {
-        ((DefaultListModel)stationList.getModel()).remove(index);
-    }
-
 
     public void setVarianceFontColor(Color color) {
         varianceTextField.setForeground(color);
+        Border border = BorderFactory.createLineBorder(color);
+        varianceWarning.setBorder(border);
+        varianceWarning.setText(" Die Abweichung liegt bei " + varianceTextField.getText() + ". ");
     }
-
 
     //
     // Set text of TextFields
@@ -223,9 +238,5 @@ public class AssessmentRecordView extends JFrame {
     public String getVarianceText() {
         return varianceTextField.getText();
     }
-
-
-    public AssessmentRecordController getController() {
-        return controller;
-    }
 }
+*/

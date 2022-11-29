@@ -1,20 +1,20 @@
 package model;
 
-import controller.DataPersistenceFile;
+import business_controller.DataPersistenceFile;
 import java.util.List;
 
-public class StationModel {
-    private static StationModel instance;
+public class StationListModel {
+    private static StationListModel instance;
     private List<Station> stationList;
 
     /*
-        use Singleton pattern to make sure that only one object of StationModel exists
+        use Singleton pattern to make sure that only one object of StationListModel exists
         this object returns the current values of all Station
         first time we refer to StationModel - we need to create the object
     */
      
-    private StationModel() {  // constructor private due to singleton-pattern
-        stationList = DataPersistenceFile.getInstance().readData();
+    private StationListModel() {  // constructor private due to singleton-pattern
+        stationList = (List<Station>) DataPersistenceFile.getInstance().readData();
     }
 
     /*
@@ -23,13 +23,13 @@ public class StationModel {
         In code we need to call the class via the 'getInstance' method
         and can not call the constructor directly.
     */
-    public static StationModel getInstance() {
+    public static StationListModel getInstance() {
         if(instance == null)
-            instance = new StationModel();
+            instance = new StationListModel();
         return instance;
     }
 
-    public List getStationList() {
+    public List<Station> getStationList() {
         return stationList;
     }
 }

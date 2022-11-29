@@ -6,66 +6,63 @@ import java.util.Date;
 // implement Serializable interface to be able to store object in file
 public class Station implements Serializable {
     private String stationId;
-    private Date date;
     private int target;
+    private String date;
     private int actual;
 
     public Station() {
+        this.stationId = calculateNewStationId();
+        this.target = calculateNewTarget();
+        this.date = "";
+        this.actual = -1;
     }
 
-    public Station(String stationId) {
-        this.stationId = stationId;
-        this.date = new Date();
+    private String calculateNewStationId() {
+        return "ID-" + new Date().getTime();
     }
 
-    public Station(String stationId, int target) {
-        this.stationId = stationId;
-        this.target = target;
-        this.date = new Date();
+    private int calculateNewTarget(){
+        // simulate complex atmosperic modeling to calculate target between 1 and 100
+        int target = 1 + (int)(Math.random()*100);
+        return target;
     }
-
-    public Station(String stationId, Date date, int target, int actual) {
-        this.stationId = stationId;
-        this.date = date;
-        this.target = target;
-        this.actual = actual;
-    }
-
 
     public String getStationId() {
         return stationId;
     }
 
-    public void setStationId(String stationId) {
-        this.stationId = stationId;
-    }
-
-    public Date getDate() {
+    public String getDate() {
         return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
     }
 
     public int getTarget() {
         return target;
     }
 
-    public void setTarget(int target) {
-        this.target = target;
-    }
-
     public int getActual() {
         return actual;
     }
 
-    public void setActual(int actual) {
-        this.actual = actual;
+    public int getVariance() {
+        if (this.actual >= 0){
+            return this.actual - this.target;
+        // if actual value is negative, there is no valid variance calculation
+        }else{
+            return 0;
+        }
+        
     }
 
-    public int getVariance() {
-        return this.actual - this.target;
+    //
+    // setter methods for all attributes, which should be editable after inizialisation
+    //
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setActual(int actual) {
+        this.actual = actual;
     }
 
     // override toString so that a specific content is printed if we print Station object

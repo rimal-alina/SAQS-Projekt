@@ -1,22 +1,16 @@
 package icecreamparticulate;
 
-// Main class - starting point
-
-import controller.StationTimerTask;
-import java.util.Timer;
-import view.AssessmentRecordView;
+import business_controller.StationCreator;
+import view.GUI_1_view.GUI_1;
+import view.GUI_2_view.GUI_2;
 
 public class IceCreamParticulate {
-
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        // create new object of the main view
-        AssessmentRecordView arv = new AssessmentRecordView();
-        StationTimerTask stt = new StationTimerTask(arv);
-        Timer timer = new Timer();
-        timer.schedule(stt, 20000, 20000);  // schedule every 20 seconds
+        //create object for automatic station creation, if not already running (singleton)
+        StationCreator.getInstance();
+        // choose between GUIs by commentting them out
+        new GUI_1();
+        new GUI_2();
     }
     
 }
