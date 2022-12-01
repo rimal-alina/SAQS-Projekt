@@ -6,6 +6,6 @@ Student project on software architecture, based on Martin Fowler's "GUI Architec
 
 ## Collaborators
 
-Pascal Nansse
-Alina Rimal
-Amelie Brucker
+Pascal Nansse </br>
+Alina Rimal </br>
+Amelie Brucker </br>
