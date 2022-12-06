@@ -3,28 +3,22 @@ package business_controller;
 import java.util.Timer;
 
 import java.util.List;
-import model.Station;
-import model.StationListModel;
 
-public class StationCreator {
+import model.FactoryModel;
+import model.StationInterface;
 
-    private static StationCreator instance; // needed for singleton pattern
-    private List <Station> stationList;
+public class StationCreator{
+    private List <StationInterface> stationList;
     private StationTimerTask task;
 
     // Singleton pattern, because schedule for creating new stations should only run once
      
-    private StationCreator() { // constructor private due to singleton-pattern
-        this.stationList = StationListModel.getInstance().getStationList();
+    // constructor protected due to singleton-pattern
+    // this object should only be initialized once in FactoryBusinessController Class
+    protected StationCreator() { 
+        this.stationList = FactoryModel.getStationListModelInstance().getStationList();
         this.task = new StationTimerTask(this.stationList);
         Timer timer = new Timer();
         timer.schedule(task, 20000, 20000);  // schedule every 20 seconds
-    }
-    
-    public static StationCreator getInstance() {
-        if (instance == null) {
-            instance = new StationCreator();
-        }
-        return instance;
     }
 }

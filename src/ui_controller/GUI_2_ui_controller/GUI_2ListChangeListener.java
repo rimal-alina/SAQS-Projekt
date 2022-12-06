@@ -4,7 +4,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-import model.Station;
+import model.StationInterface;
 import view.GUI_2_view.GUI_2;
 
 public class GUI_2ListChangeListener implements PropertyChangeListener {
@@ -19,7 +19,7 @@ public class GUI_2ListChangeListener implements PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent e) {
         // update JList for GUI
-        parent.setStationList((List<Station>) e.getNewValue());
+        parent.setStationList((List<StationInterface>) e.getNewValue());
         parent.updateCurrentStation();
     }   
 }

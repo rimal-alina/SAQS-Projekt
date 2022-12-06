@@ -4,7 +4,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import business_controller.DataPersistenceFile;
-import model.Station;
+import business_controller.FactoryBusinessController;
+import model.StationInterface;
 import ui_controller.HelperFunctions;
 import view.GUI_2_view.GUI_2;
 
@@ -23,7 +24,7 @@ public class GUI_2KeyListener implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        Station station = (Station)parent.getSelectedStationListObject();
+        StationInterface station = (StationInterface)parent.getSelectedStationListObject();
         station.setDate(parent.getDateText());
         // check if input is ok - else use message label and do not raise an exception
         try {
@@ -41,7 +42,7 @@ public class GUI_2KeyListener implements KeyListener {
             // change font color according to variance
             parent.setVarianceFontColor(HelperFunctions.getCalculatedFontColor(station.getVariance(), station.getTarget()));
             // save data after every command (save, add, delete) to keep database updated
-            DataPersistenceFile.getInstance().writeData(parent.getStationList());
+            FactoryBusinessController.getDataPersistenceInstance().writeData(parent.getStationList());
         }
     }
 

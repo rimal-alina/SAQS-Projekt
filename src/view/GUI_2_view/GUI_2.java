@@ -1,7 +1,7 @@
 package view.GUI_2_view;
 
-import model.Station;
-import model.StationListModel;
+import model.FactoryModel;
+import model.StationInterface;
 import ui_controller.HelperFunctions;
 import ui_controller.GUI_2_ui_controller.GUI_2KeyListener;
 import ui_controller.GUI_2_ui_controller.GUI_2SelectionListener;
@@ -29,11 +29,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import business_controller.DataPersistenceFile;
+import business_controller.FactoryBusinessController;
 
 // view extends java class JFrame
 public class GUI_2 extends JFrame {
     // create objects which contents will be changed during runtime as class variables
-    private JList<Station> stationList;
+    private JList<StationInterface> stationList;
     private JTextField stationIdTextField;
     private JTextField dateTextField;
     private JTextField targetTextField;
@@ -49,13 +50,13 @@ public class GUI_2 extends JFrame {
     
     private void init() {
         // create empty list
-        this.stationList = new JList<Station>();
+        this.stationList = new JList<StationInterface>();
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setViewportView(this.stationList);  // add scrollpane to list
-        setStationList(StationListModel.getInstance().getStationList());
+        setStationList(FactoryModel.getStationListModelInstance().getStationList());
         // add Listener for station list changes
         GUI_2ListChangeListener stationListChangeListener = new GUI_2ListChangeListener(this);
-        DataPersistenceFile.getInstance().addPropertyChangeListener(stationListChangeListener);
+        FactoryBusinessController.getDataPersistenceInstance().addPropertyChangeListener(stationListChangeListener);
         // create labels
         JLabel stationIdLabel = new JLabel("Stations-ID");
         JLabel dateLabel = new JLabel("Datum");
@@ -126,7 +127,7 @@ public class GUI_2 extends JFrame {
         this.addWindowListener(new WindowAdapter(){
             @Override
             public void windowClosing (WindowEvent e){
-                DataPersistenceFile.getInstance().removePropertyChangeListener(stationListChangeListener);
+                FactoryBusinessController.getDataPersistenceInstance().removePropertyChangeListener(stationListChangeListener);
                 e.getWindow().dispose();
             }
         });
@@ -142,7 +143,7 @@ public class GUI_2 extends JFrame {
 
     // functions which are used by ui_controller package
 
-    public void setStationList(List <Station> valueList) {
+    public void setStationList(List <StationInterface> valueList) {
         int currentIndex = stationList.getSelectedIndex();
         DefaultListModel listModel = new DefaultListModel();
         for (int i=0; i<valueList.size(); i++) {
@@ -154,7 +155,7 @@ public class GUI_2 extends JFrame {
     }
 
     public List getStationList() {
-        List list = new ArrayList<Station>();
+        List list = new ArrayList<StationInterface>();
         DefaultListModel listModel = ((DefaultListModel)stationList.getModel());
         for(int i=0; i<listModel.size(); i++) {
             list.add(listModel.get(i));
@@ -162,8 +163,8 @@ public class GUI_2 extends JFrame {
         return list;
     }
 
-    public Station getSelectedStationListObject() {
-        return (Station) stationList.getModel().getElementAt(stationList.getSelectedIndex());
+    public StationInterface getSelectedStationListObject() {
+        return (StationInterface) stationList.getModel().getElementAt(stationList.getSelectedIndex());
     }
 
     public int getSelectedStationListIndex() {
@@ -172,7 +173,7 @@ public class GUI_2 extends JFrame {
 
     public void updateCurrentStation (){
         if(getSelectedStationListIndex() >= 0) {
-            Station s = (Station) getSelectedStationListObject();
+            StationInterface s = (StationInterface) getSelectedStationListObject();
             stationIdTextField.setText(s.getStationId());
             dateTextField.setText(s.getDate());
             targetTextField.setText(s.getTarget() + "");

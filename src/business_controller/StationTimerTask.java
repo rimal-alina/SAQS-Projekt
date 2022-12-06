@@ -2,7 +2,9 @@ package business_controller;
 
 import java.util.TimerTask;
 import java.util.List;
-import model.Station;
+
+import model.FactoryModel;
+import model.StationInterface;
 
 /*
     this class is the TimerTask for StationCreator
@@ -13,15 +15,15 @@ import model.Station;
 */
 public class StationTimerTask extends TimerTask {
 
-    private List<Station> stationList;
+    private List<StationInterface> stationList;
 
-    protected StationTimerTask(List<Station> stationList) {
+    protected StationTimerTask(List<StationInterface> stationList) {
         this.stationList = stationList;
     }
 
     @Override
     public void run() {
-        this.stationList.add(new Station()); 
-        DataPersistenceFile.getInstance().writeData(stationList);
+        this.stationList.add(FactoryModel.getStation()); 
+        FactoryBusinessController.getDataPersistenceInstance().writeData(stationList);
     }
 }

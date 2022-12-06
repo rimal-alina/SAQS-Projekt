@@ -1,35 +1,20 @@
 package model;
 
-import business_controller.DataPersistenceFile;
+import business_controller.FactoryBusinessController;
+
 import java.util.List;
 
-public class StationListModel {
-    private static StationListModel instance;
-    private List<Station> stationList;
-
-    /*
-        use Singleton pattern to make sure that only one object of StationListModel exists
-        this object returns the current values of all Station
-        first time we refer to StationModel - we need to create the object
-    */
+public class StationListModel implements StationListModelInterface{
+    private List<StationInterface> stationList;
      
-    private StationListModel() {  // constructor private due to singleton-pattern
-        stationList = (List<Station>) DataPersistenceFile.getInstance().readData();
+    // constructor protected due to singleton-pattern
+    // this object should only be initialized once in FactoryModel Class
+    protected StationListModel() {  
+        stationList = (List<StationInterface>) FactoryBusinessController.getDataPersistenceInstance().readData();
     }
 
-    /*
-        Singleton-pattern. we only want to have exact one instance, so that
-        the data is kept only once during runtime.
-        In code we need to call the class via the 'getInstance' method
-        and can not call the constructor directly.
-    */
-    public static StationListModel getInstance() {
-        if(instance == null)
-            instance = new StationListModel();
-        return instance;
-    }
-
-    public List<Station> getStationList() {
+    @Override
+    public List<StationInterface> getStationList() {
         return stationList;
     }
 }

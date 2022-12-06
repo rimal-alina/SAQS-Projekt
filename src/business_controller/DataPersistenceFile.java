@@ -11,39 +11,24 @@ import java.util.List;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import model.Station;
+import model.StationInterface;
 
 /*
     implementation of DataPersistence into a file
 */
-public class DataPersistenceFile  {
-    private static DataPersistenceFile instance; // needed for singleton pattern
+public class DataPersistenceFile implements DataPersistenceInterface{
     private File file;
     private PropertyChangeSupport pcs;
-
-    // use Singleton pattern to make sure that only one object exists
-    // this object reads and writes data from/to the same file
-    // first time we refer to DataPersistenceFile - we need to create the object
      
-    private DataPersistenceFile() { // constructor private due to singleton-pattern
+    // constructor protected due to singleton-pattern
+    // this object should only be initialized once in FactoryBusinessController Class
+    protected DataPersistenceFile() {
         file = new File(System.getProperty("user.dir").concat("/icecreamparticulate.dat"));
         this.pcs = new PropertyChangeSupport(this);
     }
 
-    /*
-        Singleton-pattern: We only want to have exact one instance, so that
-        the file-object is created only once and we use the same file every time.
-        This was, consistency can be ensured. In code we need to call the class via
-        the 'getInstance' method and can not call the constructor directly.
-    */
-    public static DataPersistenceFile getInstance() {
-        if (instance == null){
-            instance = new DataPersistenceFile();
-        }
-        return instance;
-    }
-
-    public void writeData(List<Station> list) {
+    @Override
+    public void writeData(List<StationInterface> list) {
         try {
             FileOutputStream fos = new FileOutputStream(file);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -57,15 +42,16 @@ public class DataPersistenceFile  {
         }
     }
 
-    public List<Station> readData() {
-        List<Station> list = new ArrayList<>();
+    @Override
+    public List<StationInterface> readData() {
+        List<StationInterface> list = new ArrayList<>();
         // the first time we start application there is no data file
         if(file.isFile()) {  
             try {
                 FileInputStream fis = new FileInputStream(file);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 // read the whole list at once as elements of our list are serializable
-                list = (List<Station>) ois.readObject();
+                list = (List<StationInterface>) ois.readObject();
                 ois.close();
             } catch(IOException | ClassNotFoundException e) {
                 System.err.println("ERROR beim Laden der Daten!");
@@ -74,11 +60,12 @@ public class DataPersistenceFile  {
         return list;
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         pcs.addPropertyChangeListener(listener);
     }
 
-     
+    @Override     
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         pcs.removePropertyChangeListener(listener);
     }

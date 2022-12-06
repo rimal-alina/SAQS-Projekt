@@ -1,13 +1,13 @@
 package icecreamparticulate;
 
-import business_controller.StationCreator;
+import business_controller.FactoryBusinessController;
 import view.GUI_1_view.GUI_1;
 import view.GUI_2_view.GUI_2;
 
 public class IceCreamParticulate {
     public static void main(String[] args) {
         //create object for automatic station creation, if not already running (singleton)
-        StationCreator.getInstance();
+        FactoryBusinessController.createStationCreator();
         // choose between GUIs by commentting them out
         new GUI_1();
         new GUI_2();
