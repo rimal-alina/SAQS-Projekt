@@ -5,7 +5,7 @@ import java.util.List;
 import model.Station;
 
 /*
-    this class is the TimerTask for the Main
+    this class is the TimerTask for StationCreator
     this class creates a new station periodically.
     this is a separate class (and not an inline class/method),
     because it is better for readability and maintainability.

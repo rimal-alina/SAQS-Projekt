@@ -95,8 +95,9 @@ public class GUI_1 extends JFrame {
 
         // add listener to objects
         stationList.addListSelectionListener(new GUI_1SelectionListener(this));
-        actualTextField.addKeyListener(new GUI_1KeyListener(this));
-        dateTextField.addKeyListener(new GUI_1KeyListener(this));
+        GUI_1KeyListener keyListener = new GUI_1KeyListener(this);
+        actualTextField.addKeyListener(keyListener);
+        dateTextField.addKeyListener(keyListener);
 
         // pack, visualize
         this.pack();

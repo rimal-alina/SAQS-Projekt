@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.JOptionPane;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -54,7 +53,7 @@ public class DataPersistenceFile  {
             // because value isn't needed, it is set to null
             pcs.firePropertyChange("List changed", null, list); 
         } catch(IOException e) {
-            JOptionPane.showMessageDialog(null, "ERROR beim Speichern der Daten!", "Speicher-Fehler", JOptionPane.ERROR_MESSAGE);
+            System.err.println("ERROR beim Speichern der Daten!");
         }
     }
 
@@ -69,7 +68,7 @@ public class DataPersistenceFile  {
                 list = (List<Station>) ois.readObject();
                 ois.close();
             } catch(IOException | ClassNotFoundException e) {
-                JOptionPane.showMessageDialog(null, "ERROR beim Laden der Daten!", "Speicher-Fehler", JOptionPane.ERROR_MESSAGE);
+                System.err.println("ERROR beim Laden der Daten!");
             }
         }
         return list;
