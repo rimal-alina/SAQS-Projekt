@@ -1,23 +1,24 @@
-package ui_controller.GUI_1_ui_controller;
+package ui_controller.gui_2_ui_controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
+import business_controller.DataPersistenceFile;
 import business_controller.FactoryBusinessController;
 import model.StationInterface;
 import ui_controller.HelperFunctions;
-import view.GUI_1_view.GUI_1;
+import view.gui_2_view.GUI_2;
 
 /*
-    this class is the key listener for the JTextField actual in GUI_1
+    this class is the key listener for the JTextField actual in GUI_2
     this is a separate class (and not an inline class/method in the view),
     because it is better for readability and maintainability
 */
-public class GUI_1KeyListener implements KeyListener {
+public class GUI_2KeyListener implements KeyListener {
     // we need parent - where we are called from, to get some inputs and write output
-    private GUI_1 parent;
+    private GUI_2 parent;
 
-    public GUI_1KeyListener(GUI_1 parent) {
+    public GUI_2KeyListener(GUI_2 parent) {
         this.parent = parent;
     }
 
@@ -31,7 +32,7 @@ public class GUI_1KeyListener implements KeyListener {
             parent.setMessageLabelText("");
         } catch (NumberFormatException nfe) {
             // input wasn't positive integer
-            parent.setMessageLabelText("ATTENTION! Actual value needs to be an positive integer");
+            parent.setMessageLabelText("ACHTUNG: Der Messwert muss positiv ganzzahlig sein!");
             parent.setVarianceText("");
             parent.setActualText("");
             // since there is no valid new actual value, but user modified field, set value to -1 in database

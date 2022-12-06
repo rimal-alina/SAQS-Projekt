@@ -1,11 +1,11 @@
-package view.GUI_1_view;
+package view.gui_1_view;
 
 import model.FactoryModel;
 import model.StationInterface;
 import ui_controller.HelperFunctions;
-import ui_controller.GUI_1_ui_controller.GUI_1KeyListener;
-import ui_controller.GUI_1_ui_controller.GUI_1SelectionListener;
-import ui_controller.GUI_1_ui_controller.GUI_1ListChangeListener;
+import ui_controller.gui_1_ui_controller.GUI_1KeyListener;
+import ui_controller.gui_1_ui_controller.GUI_1ListChangeListener;
+import ui_controller.gui_1_ui_controller.GUI_1SelectionListener;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

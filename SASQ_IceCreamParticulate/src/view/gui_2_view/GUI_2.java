@@ -1,11 +1,11 @@
-package view.GUI_2_view;
+package view.gui_2_view;
 
 import model.FactoryModel;
 import model.StationInterface;
 import ui_controller.HelperFunctions;
-import ui_controller.GUI_2_ui_controller.GUI_2KeyListener;
-import ui_controller.GUI_2_ui_controller.GUI_2SelectionListener;
-import ui_controller.GUI_2_ui_controller.GUI_2ListChangeListener;
+import ui_controller.gui_2_ui_controller.GUI_2KeyListener;
+import ui_controller.gui_2_ui_controller.GUI_2ListChangeListener;
+import ui_controller.gui_2_ui_controller.GUI_2SelectionListener;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -28,7 +28,6 @@ import java.awt.Color;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-import business_controller.DataPersistenceFile;
 import business_controller.FactoryBusinessController;
 
 // view extends java class JFrame

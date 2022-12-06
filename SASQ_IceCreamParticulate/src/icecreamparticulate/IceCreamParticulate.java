@@ -1,8 +1,8 @@
 package icecreamparticulate;
 
 import business_controller.FactoryBusinessController;
-import view.GUI_1_view.GUI_1;
-import view.GUI_2_view.GUI_2;
+import view.gui_1_view.GUI_1;
+import view.gui_2_view.GUI_2;
 
 public class IceCreamParticulate {
     public static void main(String[] args) {

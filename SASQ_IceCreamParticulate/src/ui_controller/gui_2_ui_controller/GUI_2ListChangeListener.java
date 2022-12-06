@@ -1,11 +1,11 @@
-package ui_controller.GUI_2_ui_controller;
+package ui_controller.gui_2_ui_controller;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import model.StationInterface;
-import view.GUI_2_view.GUI_2;
+import view.gui_2_view.GUI_2;
 
 public class GUI_2ListChangeListener implements PropertyChangeListener {
 
